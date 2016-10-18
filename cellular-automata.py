@@ -26,38 +26,33 @@ def firstRow():
         i += 1
     return row
 
-def nextRow(row):
-    '''Applies Automata rules to a new row and returns it'''
-    #Clone row
-    next_row = list(row)
+def setStateRule73(cell_index, row):
+    prev_ = cell_index - 1
+    curr_ = cell_index
+    next_ = (cell_index + 1) % len(row) #take into account the overflow
 
-    rowlen = len(row) - 1
-    
-    for i, cell in enumerate(row):
-        #To take into account the edge cases (0th and 100th elements)
-        prev_ = i - 1
-        curr_ = i
-        next_ = (i + 1) % rowlen
-        #Rules
-        if row[prev_] == alive and row[i] == alive and row[next_] == alive:
-            next_row[i] = dead
-        elif row[prev_] == alive and row[i] == alive and row[next_] == dead:
-            next_row[i] = alive
-        elif row[prev_] == alive and row[i] == dead and row[next_] == alive:
-            next_row[i] = dead
-        elif row[prev_] == alive and row[i] == dead and row[next_] == dead:
-            next_row[i] = dead
-        elif row[prev_] == dead and row[i] == alive and row[next_] == alive:
-            next_row[i] = alive
-        elif row[prev_] == dead and row[i] == alive and row[next_] == dead:
-            next_row[i] = dead
-        elif row[prev_] == dead and row[i] == dead and row[next_] == alive:
-            next_row[i] = dead
-        elif row[prev_] == dead and row[i] == dead and row[next_] == dead:
-            next_row[i] = alive
+    family = [row[prev_],
+              row[curr_],
+              row[next_]]
+
+    if family == [alive, alive, dead]:
+        return alive
+    if family == [dead, alive, alive]:
+        return alive
+    if family == [dead, dead, dead]:
+        return alive
+    else:
+        return dead
+
+def nextRow(row):
+    next_row = list(row) #Clones row
+
+    for i, _ in enumerate(row):
+        next_row[i] = setStateRule73(i, row)
+
     return next_row
 
-def mainLoop(iterations=50):
+def mainLoop(iterations=100):
     first_row = firstRow()
     next_row = nextRow(first_row)
 
