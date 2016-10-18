@@ -63,7 +63,7 @@ def nextRow(row):
     return next_row
 
 def mainLoop(iterations=1000):
-    initial_state = list(dead*50 + alive + dead*50) #One alive state
+    initial_state = list(dead*49 + dead + alive + dead*49 + alive) #One alive state
     #initial_state = [] #Random state
     first_row = firstRow(initial_state)
     next_row = nextRow(first_row)
